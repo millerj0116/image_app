@@ -4,8 +4,6 @@ TODO
 
 * RSS Feed
 
-* Make it pretty
-
 
 DONE
 ====
