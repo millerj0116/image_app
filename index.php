@@ -39,6 +39,8 @@
             <span class="date">Posted On: <?php echo convert_date($row['date']); ?></span>
             <span class="comment-count"><?php count_comments( $row['post_id'] ); ?></span>
 
+            <span class="tags"><?php list_tags( $row['post_id'] ); ?></span>
+
             <?php
               //if this po9st was written by the logged in user, show the edit button
               if( $row['user_id'] == $logged_in_user['user_id'] ){

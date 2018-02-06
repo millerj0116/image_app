@@ -11,17 +11,27 @@ if( ! is_numeric($userid) ){
       <main class="content cf">
 
         <?php //Get the published post.
-          $query =   "SELECT username, user_id, bio, avatar
+          $query =   "SELECT users.*, posts.*
                       FROM users
-                      WHERE user_id = $userid
-                      LIMIT 1";
+	                     LEFT JOIN posts
+                       ON ( users.user_id = posts.user_id )
+
+                      WHERE did_confirm = 1
+                      AND users.user_id = $userid
+                      AND posts.is_published = 1
+                      ORDER BY username ASC
+                      LIMIT 10";
       //Run it
       $result = $db->query($query);
       //Check it - Are there rows of data to show?
       if($result->num_rows >= 1){
+
+        $count = 1
     ?>
     <?php while( $row = $result->fetch_assoc() ){
-      $user_name = $row['username'] ?>
+      //Only show the user info if first loop through
+      if( $count == 1 ){ ?>
+    <?php  $user_name = $row['username'] ?>
     <section class="profile">
       <h2>Viewing Profile: <?php echo $row['username']; ?></h2>
         <?php show_avatar( $userid, 100 ); ?>
@@ -29,13 +39,12 @@ if( ! is_numeric($userid) ){
       <h4>Profile Description:</h4>
       <p><?php echo $row['bio'] ?></p>
     </section>
-  <?php } ?>
-<?php } ?>
+  <?php }//end first loop ?>
+    <a href="single.php?post_id=<?php echo $row['post_id']; ?>"><img src="<?php echo post_image_url($row['image'], 'thumbnail'); ?>"></a>
 
-  <section class="profile_posts">
-    <h5><?php echo $user_name; ?>'s posts</h5>
-    <?php include('includes/profile_posts.php'); ?>
-  </section>
+  <?php $count++;
+      }//end while loop ?>
+<?php } ?>
 
 
       </main>
